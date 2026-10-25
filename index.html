@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MissionLab Pitch</title>
+<meta name="description" content="MissionLab pitch for LUMEN 2.0: 3:30 of slides plus the 1:30 gameplay demo, 5 minutes in total.">
+<style>
+@font-face{font-family:Fredoka;src:url(assets/fonts/Fredoka.ttf);font-weight:300 700}
+@font-face{font-family:Lexend;src:url(assets/fonts/Lexend.ttf);font-weight:100 900}
+@font-face{font-family:Mono;src:url(assets/fonts/JetBrainsMono.ttf);font-weight:100 800}
+:root{
+  --space:#080B14;--navy:#121927;--navy2:#1a2336;--rust:#C86D51;--orange:#E88754;--brand:#fe5319;
+  --violet:#9470F5;--gold:#E9BA66;--ink:#F5F3EE;--muted:#a9adb8;--line:rgba(245,243,238,.14);--danger:#ff5d4d;
+  --display:Fredoka,"Segoe UI",system-ui,sans-serif;--body:Lexend,"Segoe UI",system-ui,sans-serif;--mono:Mono,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--space);color:var(--ink);font-family:var(--body);overflow:hidden}
+img{display:block;max-width:100%}
+
+/* ---------- stage: a fixed 1920x1080 canvas scaled to the window ---------- */
+#viewport{position:fixed;inset:0;overflow:hidden;background:#000}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--space);transform-origin:center center;transform:translate(-50%,-50%) scale(var(--k,1))}
+#sky{position:absolute;inset:0;width:100%;height:100%}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility 0s linear .7s}
+.scene.active{opacity:1;visibility:visible;transition:opacity .7s ease}
+.scene [data-a]{opacity:0}
+.scene.active [data-a]{animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 140ms + 150ms)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.scene [data-step]{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.scene [data-step].shown{opacity:1;transform:none;pointer-events:auto}
+
+.pad{position:absolute;inset:0;padding:110px 140px}
+.eyebrow{font-family:var(--mono);font-size:22px;letter-spacing:.32em;text-transform:uppercase;color:var(--orange)}
+.eyebrow.violet{color:var(--violet)}
+h1,h2{font-family:var(--display);font-weight:600;letter-spacing:-.01em;line-height:1.02}
+h1{font-size:132px}
+h2{font-size:84px}
+.lede{font-size:36px;line-height:1.45;color:#d9d6cf;font-weight:300}
+.foot{position:absolute;left:140px;right:140px;bottom:64px;font-size:19px;color:var(--muted);font-family:var(--mono);letter-spacing:.02em}
+.foot b{color:var(--ink);font-weight:500}
+.tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:19px;letter-spacing:.18em;text-transform:uppercase;padding:9px 16px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+.tag i{width:9px;height:9px;border-radius:50%;background:var(--violet);display:block}
+.tag.real i{background:#3ee08f}
+.accent{color:var(--orange)}
+.violet{color:var(--violet)}
+.gold{color:var(--gold)}
+
+/* ---------- 01 · 2045 ---------- */
+#s1 .horizon{position:absolute;left:-10%;right:-10%;bottom:-1180px;height:1600px;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 0%,#e88754 0%,#c86d51 18%,#7a3626 42%,#2a120d 70%);box-shadow:0 -40px 140px rgba(232,135,84,.35)}
+#s1.active .horizon{animation:drift 30s linear both}
+@keyframes drift{from{transform:translateY(40px) scale(1.02)}to{transform:translateY(0) scale(1)}}
+#s1 .colony{position:absolute;left:50%;bottom:380px;width:760px;transform:translateX(-50%);opacity:.95}
+#s1 .moon{position:absolute;right:250px;top:170px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#cdbfb0,#6f6259 70%);box-shadow:0 0 60px rgba(233,186,102,.15)}
+#s1 .moon.small{right:520px;top:300px;width:38px;height:38px}
+#s1 .copy{position:absolute;left:140px;top:170px;max-width:1100px}
+#s1 .year{font-family:var(--display);font-size:250px;line-height:.9;color:var(--orange);font-weight:600;text-shadow:0 0 80px rgba(232,135,84,.35)}
+
+/* ---------- 02 · Stardust ---------- */
+#s2 .crystal-wrap{position:absolute;left:150px;top:150px;width:720px;height:780px;display:grid;place-items:center;transition:opacity 1.2s ease,filter 1.2s ease}
+#s2 .crystal{width:420px;filter:drop-shadow(0 0 60px rgba(148,112,245,.55)) drop-shadow(0 0 120px rgba(233,186,102,.25))}
+#s2.active .crystal{animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-18px) rotate(2deg)}}
+#s2 .ring{position:absolute;width:640px;height:640px;border-radius:50%;border:1px dashed rgba(148,112,245,.4)}
+#s2.active .ring{animation:spin 40s linear infinite}
+#s2 .ring.two{width:500px;height:500px;border-color:rgba(233,186,102,.3);animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+#s2 .scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--violet),transparent);top:20%}
+#s2.active .scan{animation:scan 3.2s ease-in-out infinite}
+@keyframes scan{50%{top:78%}}
+#s2 .copy{position:absolute;left:960px;top:230px;width:820px;transition:opacity 1s ease}
+#s2 .readout{margin-top:46px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+#s2 .readout div{border:1px solid rgba(148,112,245,.35);border-radius:16px;padding:20px 24px;background:rgba(148,112,245,.07)}
+#s2 .readout small{display:block;font-family:var(--mono);font-size:17px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+#s2 .readout b{font-family:var(--display);font-size:42px;font-weight:600;color:var(--gold)}
+#s2.beat .crystal-wrap{opacity:.1;filter:blur(6px)}
+#s2.beat .copy{opacity:0}
+#s2 .human{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:0 160px}
+#s2 .human h2{font-size:104px;max-width:1500px;margin:26px auto 0}
+#s2 .ecg{width:1500px;height:170px;margin:0 auto 30px;overflow:visible}
+#s2 .ecg path{fill:none;stroke:var(--orange);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1900;stroke-dashoffset:1900;filter:drop-shadow(0 0 10px rgba(232,135,84,.8))}
+#s2 .human.shown .ecg path{animation:ecg 2.4s cubic-bezier(.4,0,.2,1) .2s forwards}
+@keyframes ecg{to{stroke-dashoffset:0}}
+
+/* ---------- 03 · Problem ---------- */
+#s3 .bg{position:absolute;inset:0;background:url(assets/habitat.jpg) center/cover;filter:saturate(.5) brightness(.32)}
+#s3 .alarm{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(255,60,40,.38));}
+#s3.active .alarm{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+#s3 .alerts{position:absolute;left:140px;right:140px;top:520px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.alert{border:1px solid rgba(255,93,77,.55);background:rgba(20,8,8,.78);border-radius:20px;padding:30px 32px;backdrop-filter:blur(6px)}
+.alert .k{font-family:var(--mono);font-size:19px;letter-spacing:.2em;color:var(--danger);display:flex;align-items:center;gap:12px}
+.alert .k::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--danger);box-shadow:0 0 14px var(--danger)}
+.alert b{display:block;font-family:var(--display);font-size:42px;font-weight:600;margin:16px 0 8px}
+.alert p{font-size:23px;color:#d0ccc4;line-height:1.4}
+.alert .val{font-family:var(--mono);font-size:24px;color:var(--gold);margin-top:16px}
+.divider{position:absolute;left:140px;top:110px;display:flex;align-items:center;gap:18px}
+
+/* ---------- 04 · People ---------- */
+#s4 .center{position:absolute;left:50%;top:330px;transform:translateX(-50%);height:470px;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6))}
+#s4 .people{position:absolute;left:140px;right:140px;top:330px;display:grid;grid-template-columns:1fr 520px 1fr;gap:40px;align-items:center}
+.who{border-top:2px solid var(--orange);padding-top:24px}
+.who.right{text-align:right}
+.who small{font-family:var(--mono);font-size:19px;letter-spacing:.2em;color:var(--orange)}
+.who b{display:block;font-family:var(--display);font-size:44px;font-weight:600;margin:12px 0}
+.who p{font-size:25px;line-height:1.45;color:#cfcbc3}
+.stack{display:grid;gap:60px}
+#s4 .bottomline{position:absolute;left:0;right:0;top:860px;text-align:center;font-size:34px;font-weight:300;color:#e6e2da}
+
+/* ---------- 05 · Solution ---------- */
+#s5 .logo{position:absolute;left:140px;top:90px;width:400px}
+#s5 .tagline{position:absolute;left:146px;top:410px;font-family:var(--display);font-size:66px;font-weight:600;line-height:1.08;width:760px}
+#s5 .pills{position:absolute;left:140px;top:600px;width:780px;display:flex;flex-wrap:wrap;gap:14px}
+.pill{font-size:24px;padding:14px 22px;border-radius:999px;background:rgba(245,243,238,.06);border:1px solid var(--line)}
+.pill::before{content:"✓";color:var(--orange);margin-right:10px;font-weight:700}
+.browser{position:absolute;border-radius:18px;overflow:hidden;background:#0d121d;border:1px solid rgba(245,243,238,.18);box-shadow:0 50px 120px rgba(0,0,0,.65)}
+.browser .bar{height:44px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#151c2b;border-bottom:1px solid var(--line)}
+.browser .bar i{width:13px;height:13px;border-radius:50%;background:#3a4256}
+.browser .bar span{margin-left:16px;font-family:var(--mono);font-size:16px;color:var(--muted);background:#0d121d;padding:5px 14px;border-radius:8px}
+#s5 .b1{left:960px;top:150px;width:860px}
+#s5 .b2{left:1120px;top:560px;width:720px}
+#s5 .shot-label{position:absolute;right:100px;bottom:60px;font-family:var(--mono);font-size:17px;color:var(--muted)}
+
+/* ---------- 06 · Missions ---------- */
+#s6 .cards{position:absolute;left:120px;right:120px;top:330px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.mcard{border-radius:24px;overflow:hidden;background:var(--navy);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.mcard .img{height:280px;background-size:cover;background-position:center;position:relative}
+.mcard .img::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,var(--navy))}
+.mcard .body{padding:10px 34px 34px}
+.mcard .num{font-family:var(--mono);font-size:19px;letter-spacing:.2em;color:var(--orange)}
+.mcard h3{font-family:var(--display);font-size:50px;font-weight:600;margin:8px 0 18px}
+.mcard dl{display:grid;gap:14px}
+.mcard dt{font-family:var(--mono);font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mcard dd{font-size:24px;line-height:1.4}
+.playable{position:absolute;right:140px;top:128px}
+
+/* ---------- 07 · Demo ---------- */
+#s7{background:#000}
+#s7 video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+#s7 .fallback{position:absolute;inset:0;display:none;background:url(assets/pressure.jpg) center/cover}
+#s7 .fallback .card{position:absolute;left:100px;bottom:100px;max-width:1000px;background:rgba(8,11,20,.88);border:1px solid var(--line);border-radius:22px;padding:40px}
+#s7.failed .fallback{display:block}
+#s7 .endcard{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:var(--space);opacity:0;pointer-events:none;transition:opacity 1.4s ease}
+#s7.done .endcard{opacity:1}
+#s7 .endcard img{width:780px;margin:0 auto}
+#s7 .endcard .tl{font-family:var(--display);font-size:60px;font-weight:600;margin-top:30px}
+#s7 .endcard .names{margin-top:60px;font-family:var(--mono);font-size:22px;letter-spacing:.08em;color:var(--muted)}
+#s7 .endcard .thanks{margin-top:34px;font-family:var(--display);font-size:44px;color:var(--orange)}
+
+/* ---------- 08 · Tech ---------- */
+#s8 h2{font-size:68px}
+#s8 .arch{position:absolute;left:140px;right:140px;top:350px;display:grid;gap:16px}
+.row{display:grid;gap:18px}
+.box{border:1px solid var(--line);background:rgba(18,25,39,.9);border-radius:18px;padding:18px 28px;position:relative}
+.box small{font-family:var(--mono);font-size:16px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.box b{display:block;font-family:var(--display);font-size:34px;font-weight:600;margin:6px 0 4px}
+.box p{font-size:21px;color:#c9c5bd;line-height:1.4}
+.box.engine{border-color:var(--orange);background:linear-gradient(135deg,rgba(232,135,84,.18),rgba(18,25,39,.95) 60%);box-shadow:0 0 60px rgba(232,135,84,.18)}
+.box.engine b{font-size:40px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chips span{font-family:var(--mono);font-size:18px;padding:7px 14px;border-radius:999px;border:1px solid rgba(232,135,84,.45);color:var(--gold)}
+.box.nova{border-style:dashed;border-color:rgba(148,112,245,.7)}
+.flow{font-family:var(--mono);font-size:17px;color:var(--muted);text-align:center;letter-spacing:.1em}
+.flow em{font-style:normal;color:var(--orange)}
+#s8 .rule{position:absolute;right:140px;top:140px;width:640px;text-align:right;font-size:26px;color:#e3dfd8;line-height:1.4}
+
+/* ---------- 09 · Impact ---------- */
+#s9 .vals{position:absolute;left:140px;top:330px;width:900px;display:grid;gap:26px}
+.val{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:22px}
+.val small{font-family:var(--mono);font-size:20px;letter-spacing:.2em;color:var(--orange)}
+.val p{font-size:28px;line-height:1.4}
+#s9 .teacher{left:1110px;top:150px;width:690px}
+#s9 .plans{position:absolute;left:1110px;top:640px;width:690px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.plan{border:1px solid var(--line);border-radius:16px;padding:16px 20px;background:rgba(18,25,39,.85)}
+.plan small{font-family:var(--mono);font-size:15px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.plan b{display:block;font-family:var(--display);font-size:30px;font-weight:600;margin-top:4px}
+.plan b span{color:var(--gold)}
+.plan.hl{border-color:var(--orange)}
+#s9 .next{position:absolute;left:140px;top:830px;width:900px;font-size:28px;color:#e6e2da}
+#s9 .next b{color:var(--orange);font-weight:500}
+
+/* ---------- 10 · Beyond ---------- */
+#s10 .road{position:absolute;left:140px;right:140px;top:500px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;transition:opacity .8s}
+.stop{position:relative;padding-top:70px;text-align:center}
+.stop::before{content:"";position:absolute;left:0;right:0;top:22px;height:2px;background:linear-gradient(90deg,rgba(148,112,245,.2),rgba(148,112,245,.7))}
+.stop:first-child::before{left:50%}
+.stop:last-child::before{right:50%}
+.stop::after{content:"";position:absolute;left:50%;top:10px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:var(--space);border:3px solid var(--violet)}
+.stop.now::after{background:var(--orange);border-color:var(--orange);box-shadow:0 0 30px var(--orange)}
+.stop small{font-family:var(--mono);font-size:18px;letter-spacing:.2em;color:var(--violet)}
+.stop.now small{color:var(--orange)}
+.stop b{display:block;font-family:var(--display);font-size:40px;font-weight:600;margin:10px 0}
+.stop p{font-size:22px;color:#c9c5bd;line-height:1.4;padding:0 18px}
+#s10 .close{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(ellipse at center,rgba(8,11,20,.5),var(--space) 75%)}
+#s10 .close h2{font-size:80px;max-width:1500px;line-height:1.12}
+#s10 .final{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:var(--space)}
+#s10 .final img{width:780px;margin:0 auto}
+#s10 .final .tl{font-family:var(--display);font-size:60px;font-weight:600;margin-top:30px}
+#s10 .final .names{margin-top:60px;font-family:var(--mono);font-size:22px;letter-spacing:.08em;color:var(--muted)}
+#s10.closing .road,#s10.closing .head{opacity:0}
+
+/* ---------- HUD ---------- */
+#hud{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(245,243,238,.06);z-index:20}
+#hud .bar{height:100%;background:linear-gradient(90deg,var(--brand),var(--orange));width:0;transition:width .4s}
+#meta{position:absolute;right:28px;bottom:16px;z-index:20;font-family:var(--mono);font-size:16px;color:rgba(245,243,238,.45);display:flex;gap:18px}
+#meta .late{color:var(--gold)}#meta .over{color:var(--danger)}
+#meta.hide-timer .t{display:none}
+#black{position:absolute;inset:0;background:#000;z-index:40;display:none}
+#black.on{display:block}
+.overlay{position:absolute;z-index:30;background:rgba(8,11,20,.94);border:1px solid var(--line);border-radius:22px;padding:34px 40px;display:none;font-size:22px;line-height:1.5}
+.overlay.on{display:block}
+#notes{left:60px;right:60px;bottom:50px;max-height:520px;overflow:auto}
+#notes h4,#help h4{font-family:var(--mono);font-size:18px;letter-spacing:.2em;color:var(--orange);margin-bottom:12px}
+#help{left:50%;top:50%;transform:translate(-50%,-50%);width:1000px}
+#help table{width:100%;border-collapse:collapse}#help td{padding:7px 0;border-bottom:1px solid var(--line)}#help td:first-child{font-family:var(--mono);color:var(--gold);width:330px}
+#toast{position:absolute;left:50%;top:40px;transform:translateX(-50%);z-index:35;font-family:var(--mono);font-size:20px;background:rgba(8,11,20,.9);border:1px solid var(--line);padding:12px 22px;border-radius:12px;opacity:0;transition:opacity .3s}
+#toast.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .scene,.scene [data-step]{transition-duration:.01s!important}
+  .scene.active [data-a]{animation-duration:.01s!important;animation-delay:0s!important}
+  *{animation-iteration-count:1!important}
+  #s1.active .horizon,#s2.active .crystal,#s2.active .ring,#s2.active .scan,#s3.active .alarm{animation:none!important}
+}
+
+/* ---------- presenter view (same file, opened with #presenter) ---------- */
+body.presenter{overflow:auto;background:#0b0f19}
+body.presenter #viewport{display:none}
+#pv{display:none;padding:28px 34px;font-size:18px;min-height:100%}
+body.presenter #pv{display:block}
+#pv header{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:22px}
+#pv .clock{font-family:var(--mono);font-size:54px;font-weight:600}
+#pv .clock small{font-size:20px;color:var(--muted);font-weight:400}
+#pv .pace{font-family:var(--mono);font-size:20px;padding:6px 14px;border-radius:10px;background:var(--navy2)}
+#pv .pace.ok{color:#3ee08f}#pv .pace.late{color:var(--gold)}#pv .pace.over{color:var(--danger)}
+#pv .grid{display:grid;grid-template-columns:1.6fr 1fr;gap:22px}
+#pv section{background:var(--navy);border:1px solid var(--line);border-radius:16px;padding:22px 26px}
+#pv h3{font-family:var(--mono);font-size:15px;letter-spacing:.2em;color:var(--orange);text-transform:uppercase;margin-bottom:10px}
+#pv .title{font-family:var(--display);font-size:36px;font-weight:600}
+#pv .script{font-size:25px;line-height:1.55;margin:14px 0}
+#pv dl{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;font-size:17px;line-height:1.45}
+#pv dt{color:var(--muted);font-family:var(--mono);font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
+#pv .bar2{height:8px;background:var(--navy2);border-radius:99px;overflow:hidden;margin-top:10px}#pv .bar2 i{display:block;height:100%;background:var(--orange);width:0}
+#pv button{font:inherit;font-size:17px;color:var(--ink);background:var(--navy2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer}
+#pv button:hover{border-color:var(--orange)}
+#pv button.primary{background:var(--brand);border-color:var(--brand);font-weight:600}
+#pv .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+#pv ol{margin-left:22px;font-size:17px;line-height:1.9}#pv ol li.cur{color:var(--orange);font-weight:600}#pv ol li span{color:var(--muted);font-family:var(--mono);font-size:14px;margin-left:8px}
+#pv .warn{color:var(--gold);font-size:17px;margin-top:10px}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+  <canvas id="sky" width="1920" height="1080"></canvas>
+
+  <!-- 01 -->
+  <section class="scene" id="s1">
+    <div class="horizon"></div>
+    <div class="moon"></div><div class="moon small"></div>
+    <svg class="colony" viewBox="0 0 760 170" aria-hidden="true" data-a style="--d:4">
+      <g fill="#1a0d0a" stroke="#E88754" stroke-opacity=".55" stroke-width="2">
+        <path d="M60 170 a90 90 0 0 1 180 0z"/><path d="M250 170 a130 130 0 0 1 260 0z"/><path d="M530 170 a70 70 0 0 1 140 0z"/>
+        <rect x="235" y="140" width="30" height="30"/><rect x="505" y="146" width="34" height="24"/>
+        <path d="M380 40 v-30"/><path d="M600 100 v-40"/><rect x="680" y="120" width="70" height="8" transform="rotate(-12 715 124)"/>
+      </g>
+      <g fill="#E9BA66"><circle cx="330" cy="120" r="4"/><circle cx="420" cy="110" r="4"/><circle cx="150" cy="135" r="3"/><circle cx="600" cy="140" r="3"/><circle cx="380" cy="8" r="5"/></g>
+    </svg>
+    <div class="copy">
+      <div class="tag" data-a style="--d:0"><i></i>A fictional future</div>
+      <div class="year" data-a style="--d:1">2045.</div>
+      <h2 data-a style="--d:2">Humanity has gone<br>beyond Earth.</h2>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="scene" id="s2">
+    <div class="crystal-wrap">
+      <div class="ring"></div><div class="ring two"></div><div class="scan"></div>
+      <svg class="crystal" viewBox="0 0 200 260" aria-label="Stardust crystal, concept art">
+        <defs>
+          <linearGradient id="cA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9c8ff"/><stop offset=".5" stop-color="#9470F5"/><stop offset="1" stop-color="#3b2580"/></linearGradient>
+          <linearGradient id="cB" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7b0"/><stop offset=".6" stop-color="#E9BA66"/><stop offset="1" stop-color="#7a5320"/></linearGradient>
+        </defs>
+        <polygon points="100,0 160,70 100,260 40,70" fill="url(#cA)"/>
+        <polygon points="100,0 160,70 100,110" fill="#efe6ff" opacity=".55"/>
+        <polygon points="160,70 100,260 100,110" fill="url(#cB)" opacity=".75"/>
+        <polygon points="40,70 100,110 100,260" fill="#2a1a63" opacity=".55"/>
+        <polygon points="30,120 58,96 70,190 38,200" fill="url(#cA)" opacity=".85"/>
+        <polygon points="170,140 188,118 192,200 168,214" fill="url(#cB)" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="copy">
+      <div class="eyebrow violet" data-a style="--d:0">Discovery · imagined</div>
+      <h2 data-a style="--d:1;margin-top:22px"><span class="violet">Stardust.</span><br>A new frontier of value.</h2>
+      <p class="lede" data-a style="--d:2;margin-top:28px">A rare extraterrestrial material. Once purified, it is worth more than gold, and becomes a new interplanetary currency.</p>
+      <div class="readout" data-a style="--d:3">
+        <div><small>Purity</small><b>99.97%</b></div>
+        <div><small>Value</small><b>Above gold</b></div>
+      </div>
+    </div>
+    <div class="human" data-step="1">
+      <svg class="ecg" viewBox="0 0 1500 170" aria-hidden="true"><path d="M0 95 H600 L630 95 L650 60 L670 95 L700 95 L720 15 L748 160 L772 40 L792 95 L830 95 L852 75 L874 95 H1500"/></svg>
+      <div class="eyebrow">The real question</div>
+      <h2>But what is the value of an <span class="accent">astronaut’s life?</span></h2>
+      <p class="lede" style="margin-top:34px;font-size:40px">No currency can replace one.</p>
+    </div>
+    <div class="foot"><b>Science fiction.</b> Stardust is our invented world-building, not a real material or asset. In MissionLab it is the fictional pilot currency.</div>
+  </section>
+
+  <!-- 03 -->
+  <section class="scene" id="s3">
+    <div class="bg"></div><div class="alarm"></div>
+    <div class="divider" data-a style="--d:0"><span class="tag real"><i></i>Back to reality</span></div>
+    <div class="pad" style="padding-top:200px">
+      <h2 data-a style="--d:1">More missions. More complexity.<br><span class="accent">Real human risk.</span></h2>
+      <p class="lede" data-a style="--d:2;margin-top:26px;max-width:1300px">Far from help, small failures become emergencies fast.</p>
+    </div>
+    <div class="alerts">
+      <div class="alert" data-a style="--d:3"><div class="k">POWER</div><b>Dust storm</b><p>Solar output collapses. Life support still needs energy.</p></div>
+      <div class="alert" data-a style="--d:4"><div class="k">PRESSURE</div><b>Cabin pressure falling</b><p>A leak, or an instrument that is lying?</p></div>
+      <div class="alert" data-a style="--d:5"><div class="k">ATMOSPHERE</div><b>CO₂ rising</b><p>Oxygen looks fine. The air is not.</p></div>
+    </div>
+    <div class="foot" style="background:rgba(8,11,20,.75);padding:10px 14px;border-radius:10px;left:126px;right:auto">Source: NASA Human Research Program, “Five Hazards of Human Spaceflight” · nasa.gov/hrp/hazards</div>
+  </section>
+
+  <!-- 04 -->
+  <section class="scene" id="s4">
+    <div class="pad">
+      <div class="eyebrow" data-a style="--d:0">The people at risk</div>
+      <h2 data-a style="--d:1;margin-top:20px">Behind every mission is a human being.</h2>
+    </div>
+    <div class="people">
+      <div class="stack">
+        <div class="who" data-a style="--d:2"><small>01 · LEARNERS</small><b>Aspiring astronauts</b><p>Need real systems understanding and decision practice.</p></div>
+        <div class="who" data-a style="--d:3"><small>02 · TRAINERS</small><b>Teachers &amp; trainers</b><p>Need repeatable scenarios and a view of how students reason.</p></div>
+      </div>
+      <img src="assets/fankouch-thinking.webp" alt="Fankouch, MissionLab's astronaut mascot" data-a style="--d:2;height:470px;width:auto;margin:0 auto">
+      <div class="who right" data-a style="--d:4"><small>03 · FUTURE CREWS</small><b>Exploration crews</b><p>Must recognise, diagnose and fix the unexpected, then prove the fix worked.</p></div>
+    </div>
+    <div class="bottomline" data-a style="--d:5">Knowing the theory is not enough.</div>
+    <div class="foot">MissionLab supports STEM learning and practice. It is not certified astronaut training.</div>
+  </section>
+
+  <!-- 05 -->
+  <section class="scene" id="s5">
+    <img class="logo" src="assets/logo-full.png" alt="MissionLab" data-a style="--d:0">
+    <div class="tagline" data-a style="--d:1">Train on Earth.<br><span class="accent">Think beyond it.</span></div>
+    <div class="pills">
+      <span class="pill" data-a style="--d:3">Runs in the browser</span>
+      <span class="pill" data-a style="--d:4">Explorable 3D Mars habitat</span>
+      <span class="pill" data-a style="--d:5">Real engineering decisions</span>
+      <span class="pill" data-a style="--d:6">Evidence-based diagnosis</span>
+      <span class="pill" data-a style="--d:7">Step-by-step repairs</span>
+      <span class="pill" data-a style="--d:8">Mission Autopsy &amp; rewind</span>
+      <span class="pill" data-a style="--d:9">AI tutor NOVA + guide Fankouch</span>
+    </div>
+    <div class="browser b1" data-a style="--d:2"><div class="bar"><i></i><i></i><i></i><span>missionlab · mission</span></div><img src="assets/pressure.jpg" alt="MissionLab mission screen: Mars colony with the engineering console and Fankouch guidance"></div>
+    <div class="browser b2" data-a style="--d:4"><div class="bar"><i></i><i></i><i></i><span>habitat · walk mode</span></div><img src="assets/habitat.jpg" alt="Inside the 3D habitat"></div>
+    <div class="shot-label">Real product screens</div>
+  </section>
+
+  <!-- 06 -->
+  <section class="scene" id="s6">
+    <div class="pad">
+      <div class="eyebrow" data-a style="--d:0">Three missions</div>
+      <h2 data-a style="--d:1;margin-top:20px">Each one teaches a different skill.</h2>
+    </div>
+    <span class="tag real playable" data-a style="--d:1"><i></i>All three playable today</span>
+    <div class="cards">
+      <article class="mcard" data-a style="--d:2"><div class="img" style="background-image:url(assets/redstorm.jpg)"></div><div class="body">
+        <div class="num">MISSION 01</div><h3>The Red Storm</h3>
+        <dl><dt>Hazard</dt><dd>A dust storm cuts solar power for 72 hours.</dd><dt>Learn</dt><dd>Electrical power, water recycling, resource allocation.</dd></dl></div></article>
+      <article class="mcard" data-a style="--d:3"><div class="img" style="background-image:url(assets/pressure.jpg)"></div><div class="body">
+        <div class="num">MISSION 02</div><h3>Pressure Drop</h3>
+        <dl><dt>Hazard</dt><dd>Habitat pressure falling. Leak or faulty sensor?</dd><dt>Learn</dt><dd>Gas pressure, isolation, fault diagnosis, repair.</dd></dl></div></article>
+      <article class="mcard" data-a style="--d:4"><div class="img" style="background-image:url(assets/silentair.jpg)"></div><div class="body">
+        <div class="num">MISSION 03</div><h3>Silent Air</h3>
+        <dl><dt>Hazard</dt><dd>CO₂ rising while oxygen still looks fine.</dd><dt>Learn</dt><dd>Air composition, scrubbers, ventilation, evidence.</dd></dl></div></article>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="scene" id="s7">
+    <video id="demo" src="assets/demo.mp4" preload="auto" playsinline></video>
+    <div class="fallback"><div class="card">
+      <div class="eyebrow">Gameplay video unavailable</div>
+      <h2 style="font-size:58px;margin:16px 0">Pressure Drop, solved end to end</h2>
+      <p class="lede" style="font-size:28px">Observe → collect evidence → diagnose the hatch seal → isolate the valve → 7-step repair → pressure-hold test passed. Verified recovery at mission minute 23.</p>
+    </div></div>
+    <div class="endcard"><div>
+      <img src="assets/logo-full.png" alt="MissionLab">
+      <div class="tl">Train on Earth. <span class="accent">Think beyond it.</span></div>
+      <div class="thanks">Thank you.</div>
+      <div class="names">Mohamed Aziz Kammoun · Mohamed Hbib Allah Bibani · Amina Bayoudh<br><span style="color:var(--orange)">LUMEN 2.0 · BEYOND 2030</span></div>
+    </div></div>
+  </section>
+
+  <!-- 08 -->
+  <section class="scene" id="s8">
+    <div class="pad">
+      <div class="eyebrow" data-a style="--d:0">Under the hood</div>
+      <h2 data-a style="--d:1;margin-top:20px">Powered by engineering,<br>not scripted outcomes.</h2>
+    </div>
+    <p class="rule" data-a style="--d:2">The engine decides. The 3D view shows it.<br>NOVA explains it. <span class="accent">AI never touches the physics.</span></p>
+    <div class="arch">
+      <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="box" data-a style="--d:3"><small>Interface</small><b>Next.js 15 · React 19</b><p>TypeScript, Tailwind, Zustand state</p></div>
+        <div class="box" data-a style="--d:4"><small>3D habitat</small><b>Three.js · React Three Fiber</b><p>Visualises engine state, walkable</p></div>
+        <div class="box nova" data-a style="--d:5"><small>AI tutor · reads state only</small><b>NOVA</b><p>Offline rule-based tutor, optional server-side Gemini</p></div>
+      </div>
+      <div class="flow" data-a style="--d:6">player actions <em>↓ validated</em> &nbsp;·&nbsp; state <em>↑ rendered</em></div>
+      <div class="box engine" data-a style="--d:6"><small>The authority</small><b>Deterministic simulation engine</b><p>Pure TypeScript. Every action validated, every outcome calculated, every run reproducible, so rewind is exact.</p>
+        <div class="chips"><span>Power</span><span>Water</span><span>Oxygen</span><span>Cabin pressure</span><span>CO₂</span><span>Ventilation</span></div></div>
+      <div class="row" style="grid-template-columns:1fr 1fr">
+        <div class="box" data-a style="--d:7"><small>Learning layer</small><b>Evidence · diagnosis · Autopsy · rewind</b></div>
+        <div class="box" data-a style="--d:8"><small>Platform</small><b>Accounts · classes · assignments</b><p>Prisma + PostgreSQL</p></div>
+      </div>
+    </div>
+    <div class="foot">Simplified educational models: physically grounded, not flight-certified.</div>
+  </section>
+
+  <!-- 09 -->
+  <section class="scene" id="s9">
+    <div class="pad">
+      <div class="eyebrow" data-a style="--d:0">Impact &amp; business</div>
+      <h2 data-a style="--d:1;margin-top:20px;font-size:76px">Systems engineering,<br>made accessible.</h2>
+    </div>
+    <div class="vals">
+      <div class="val" data-a style="--d:2"><small>STUDENTS</small><p>Learn by experimenting, failing safely and trying again.</p></div>
+      <div class="val" data-a style="--d:3"><small>EDUCATORS</small><p>See how each student reasoned. Assign missions to the class or chosen students.</p></div>
+      <div class="val" data-a style="--d:4"><small>INSTITUTIONS</small><p>A browser-based STEM platform that scales without special hardware.</p></div>
+    </div>
+    <div class="browser teacher" data-a style="--d:3"><div class="bar"><i></i><i></i><i></i><span>teacher dashboard</span></div><img src="assets/teacher.jpg" alt="MissionLab teacher dashboard"></div>
+    <div class="plans">
+      <div class="plan" data-a style="--d:5"><small>Explorer · learners</small><b>Free</b></div>
+      <div class="plan hl" data-a style="--d:6"><small>Classroom · 35 students</small><b><span>✦ 299</span> / year</b></div>
+      <div class="plan" data-a style="--d:7"><small>Academy · 300 students</small><b><span>✦ 1,499</span> / year</b></div>
+      <div class="plan" data-a style="--d:8"><small>Museums &amp; space camps</small><b>Custom</b></div>
+    </div>
+    <p class="next" data-a style="--d:9"><b>Next step:</b> classroom pilots to measure learning outcomes.</p>
+    <div class="foot">Proposed model. Prices in Stardust (✦), the pilot’s fictional currency. No revenue or customers claimed.</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="scene" id="s10">
+    <div class="pad head" style="transition:opacity .8s">
+      <div class="eyebrow violet" data-a style="--d:0">Roadmap · future</div>
+      <h2 data-a style="--d:1;margin-top:20px">Beyond the screen.</h2>
+    </div>
+    <div class="road">
+      <div class="stop now" data-a style="--d:2"><small>TODAY</small><b>Web</b><p>Runs in any browser</p></div>
+      <div class="stop" data-a style="--d:3"><small>NEXT</small><b>VR</b><p>Walk the habitat in a headset</p></div>
+      <div class="stop" data-a style="--d:4"><small>NEXT</small><b>AR</b><p>Repair steps overlaid on real equipment</p></div>
+      <div class="stop" data-a style="--d:5"><small>LATER</small><b>Mixed reality</b><p>Physical props, simulated faults</p></div>
+      <div class="stop" data-a style="--d:6"><small>VISION</small><b>Crew training</b><p>Learners solve missions together</p></div>
+    </div>
+    <div class="close" data-step="1"><div>
+      <h2>The future of space exploration will need more explorers.</h2>
+      <p class="lede" style="margin-top:36px;font-size:44px">Our mission: help the next generation <span class="accent">learn before they launch.</span></p>
+      <p class="eyebrow" style="margin-top:70px">Now, see it in action ▶</p>
+    </div></div>
+  </section>
+
+  <div id="hud"><div class="bar"></div></div>
+  <div id="meta" class="hide-timer"><span class="n"></span><span class="t"></span><span class="m"></span></div>
+  <div id="notes" class="overlay"></div>
+  <div id="help" class="overlay">
+    <h4>CONTROLS</h4>
+    <table>
+      <tr><td>→ · Space · PageDown</td><td>Next (reveals the next beat first)</td></tr>
+      <tr><td>← · PageUp</td><td>Previous</td></tr>
+      <tr><td>1–9, 0</td><td>Jump to scene 1–10</td></tr>
+      <tr><td>F</td><td>Fullscreen</td></tr>
+      <tr><td>P</td><td>Open presenter window (notes, timer, next scene)</td></tr>
+      <tr><td>N</td><td>Notes on this screen (rehearsal)</td></tr>
+      <tr><td>A</td><td>Auto mode on/off (5:00 timeline)</td></tr>
+      <tr><td>T</td><td>Show/hide timer</td></tr>
+      <tr><td>V · S</td><td>Play demo video from the start · skip to the thank-you screen</td></tr>
+      <tr><td>M</td><td>Mute/unmute demo</td></tr>
+      <tr><td>B</td><td>Black screen</td></tr>
+      <tr><td>Shift + R</td><td>Reset to scene 1 and clear the timer</td></tr>
+      <tr><td>H · Esc</td><td>This help · close overlays</td></tr>
+    </table>
+  </div>
+  <div id="toast"></div>
+  <div id="black"></div>
+</div></div>
+
+<!-- presenter view -->
+<div id="pv">
+  <header>
+    <div class="clock"><span id="pvClock">0:00</span> <small>/ 5:00</small></div>
+    <div class="pace ok" id="pvPace">on plan</div>
+    <div class="pace" id="pvMode">manual</div>
+    <div class="btns" style="margin:0">
+      <button class="primary" data-cmd="prev">◀ Prev</button><button class="primary" data-cmd="next">Next ▶</button>
+      <button data-cmd="auto">Auto on/off</button><button data-cmd="replay">Replay demo</button><button data-cmd="skip">Skip video</button>
+      <button data-cmd="jump" data-to="4">→ Solution</button><button data-cmd="jump" data-to="6">→ Tech</button><button data-cmd="jump" data-to="8">→ Closing</button><button data-cmd="jump" data-to="9">→ Demo</button>
+      <button data-cmd="black">Black</button><button data-cmd="reset">Reset</button>
+    </div>
+  </header>
+  <p class="warn" id="pvWarn"></p>
+  <div class="grid">
+    <section>
+      <h3 id="pvNow">Now</h3>
+      <div class="title" id="pvTitle"></div>
+      <div class="bar2"><i id="pvSceneBar"></i></div>
+      <p class="script" id="pvScript"></p>
+      <dl id="pvDl"></dl>
+    </section>
+    <div style="display:grid;gap:22px;align-content:start">
+      <section><h3>Next</h3><div class="title" id="pvNext" style="font-size:26px"></div><p id="pvNextCue" style="margin-top:8px;color:var(--muted)"></p></section>
+      <section><h3>Run of show · 5:00</h3><ol id="pvList"></ol></section>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Timeline: 3:30 of slides + 1:30 demo = 5:00. `steps` are extra beats inside a scene; `stepAt` is when auto mode reveals them. */
+const SCENES = [
+ {id:'s1',title:'2045 · Humanity beyond Earth',dur:15,
+  idea:'Open with scale and mystery. This is fiction, and we say so.',
+  script:'Imagine the year 2045. Humanity has pushed beyond Earth. Research stations on Mars. Technologies that once seemed impossible.',
+  cue:'Mars horizon, colony silhouette, “A fictional future” tag.',
+  emph:'Slow, calm voice. Pause after “2045”.',
+  trans:'“And in this future…” → next.',
+  short:'2045. Humanity lives and works on Mars.'},
+ {id:'s2',title:'Stardust → an astronaut’s life',dur:20,steps:1,stepAt:[11],
+  idea:'Invented value vs. irreplaceable people: the emotional hinge of the pitch.',
+  script:'In this future, we imagine the discovery of Stardust: a rare material that, once purified, is worth more than gold, and becomes a new interplanetary currency. [CLICK] But Stardust may be priceless. The people we send to find it are irreplaceable.',
+  cue:'Crystal first. Click once: silhouette and “What is the value of an astronaut’s life?”',
+  emph:'“irreplaceable”. Then a one-second silence.',
+  trans:'Click → “Back to reality”.',
+  short:'Stardust is worth more than gold. [CLICK] But no currency replaces an astronaut’s life.'},
+ {id:'s3',title:'The problem · real human risk',dur:25,
+  idea:'Leave fiction. Space emergencies are real, fast, and far from help.',
+  script:'Back to reality. As exploration expands, astronauts make complex decisions far from help. A dust storm cuts the power. Cabin pressure starts dropping. CO₂ quietly rises. NASA counts distance from Earth and hostile, closed environments among the core hazards of human spaceflight. Small failures become emergencies, fast.',
+  cue:'Red alert vignette, three alert cards appear one by one.',
+  emph:'Point at each card as you name it. These three are exactly our three missions.',
+  trans:'“And behind each of these alerts…” → next.',
+  short:'Back to reality: storms, leaks, bad air. Far from Earth, small failures become emergencies.'},
+ {id:'s4',title:'The people at risk',dur:15,
+  idea:'Make it human: learners, trainers, future crews.',
+  script:'Behind every mission is a human being. Knowing the theory isn’t enough: you have to recognise a problem, gather evidence, act, and prove your fix actually worked.',
+  cue:'Fankouch in the centre, three audiences around.',
+  emph:'The four verbs: recognise, gather evidence, act, prove.',
+  trans:'“That’s why we built…” → next.',
+  short:'Theory isn’t enough. You must diagnose, act, and prove it worked.'},
+ {id:'s5',title:'The solution · MissionLab',dur:30,
+  idea:'Reveal the product. Everything shown is real and running.',
+  script:'That’s why we built MissionLab: a browser-based training platform where learners live through simulated space emergencies. You walk a 3D Mars habitat, make engineering decisions, diagnose equipment and repair it step by step. Fankouch guides you, NOVA our AI tutor explains. And when you fail, Mission Autopsy shows why, and you can rewind and try another path.',
+  cue:'Logo + tagline, then real product screens and feature pills.',
+  emph:'“Runs in the browser”: no install, no headset needed.',
+  trans:'“Three missions are playable today.” → next.',
+  short:'MissionLab: a browser platform where you live a space emergency, diagnose it, fix it and learn from failure.'},
+ {id:'s6',title:'Three missions',dur:25,
+  idea:'Breadth: three different engineering skills, all implemented.',
+  script:'Three missions are playable today. The Red Storm: a dust storm cuts solar power; plan energy and keep water recycling alive for 72 hours. Pressure Drop: is air escaping, or is an instrument lying? Silent Air: oxygen looks fine, but CO₂ is rising. Each one teaches a different engineering skill.',
+  cue:'Three cards with real gameplay frames.',
+  emph:'“Is an instrument lying?”: we teach scientific scepticism, not button pressing.',
+  trans:'“So how does it work?” → Tech.',
+  short:'Red Storm: power and water. Pressure Drop: leaks. Silent Air: CO₂.'},
+ {id:'s8',title:'Technology',dur:25,
+  idea:'Credibility: the engine is the authority, not scripts, not AI.',
+  script:'Under the hood, the simulation engine is the authority. It’s pure, deterministic TypeScript: every action is validated, every outcome calculated, never scripted, so rewind is exact. The 3D view only visualises that state, and NOVA, our AI tutor, explains it. AI never decides the physics.',
+  cue:'Architecture: interface, 3D, NOVA above; the engine in the middle; learning and platform below.',
+  emph:'“AI never decides the physics.”',
+  trans:'“So what does this mean for schools?” → next.',
+  short:'A deterministic engine decides everything; 3D shows it; AI only explains.'},
+ {id:'s9',title:'Impact & business model',dur:30,
+  idea:'Who benefits, how it makes money, what we validate next.',
+  script:'For students, it’s learning by experimenting and failing safely. For teachers, a dashboard that shows how each student reasoned, and lets them assign missions to the whole class or chosen students. For institutions, a SaaS that scales with no special hardware: free for learners, yearly Classroom and Academy plans, and custom installs for museums and space camps. Our next step: classroom pilots to measure real learning outcomes.',
+  cue:'Three value rows, the real teacher dashboard, the four plans.',
+  emph:'Honesty: proposed pricing, shown in fictional Stardust. No revenue claimed.',
+  trans:'“And the screen is only the beginning.” → next.',
+  short:'Students experiment, teachers see reasoning, schools subscribe. Next: classroom pilots.'},
+ {id:'s10',title:'Beyond the screen · closing line',dur:25,steps:1,stepAt:[12],
+  idea:'Vision, then the closing line that hands over to the demo.',
+  script:'Today MissionLab runs in the browser. Tomorrow: VR habitats, AR-guided repairs, mixed reality, and whole crews training together. [CLICK] The future of space exploration will need more explorers. Our mission is to help the next generation learn before they launch. Now, let us show you MissionLab in action.',
+  cue:'Roadmap → closing line with “Now, see it in action ▶”.',
+  emph:'Roadmap items are future plans. Say “tomorrow”, “we envision”.',
+  trans:'Click → the demo video starts.',
+  short:'VR, AR, crews next. [CLICK] Learn before they launch. Let’s see it in action.'},
+ {id:'s7',title:'Demo · Pressure Drop (video 1:30) → Thank you',dur:90,video:true,
+  idea:'Finish on proof: real gameplay, one mission solved end to end.',
+  script:'Let it play. Optional lines: while the astronaut walks: “Everything happens inside the habitat: walk, investigate, repair.” At the console: “Fankouch coaches: it asks questions, it never gives the answer.” At the pressure-hold test: “Success only counts once the engine verifies it.” At the teacher screens: “And teachers see every attempt.” When it ends: “Thank you.”',
+  cue:'Video auto-plays when you enter. When it ends, it fades to the logo, “Thank you” and team names.',
+  emph:'Stay quiet most of the time. Let the footage speak.',
+  trans:'End. Stay on the thank-you screen for questions. S jumps straight to it.',
+  short:'If over time: press S to go to the thank-you screen.',
+  facts:'Real recorded gameplay of the actual app, edited and sped up. Every result shown matches the saved engine state (success, verified, minute 23). NOVA is shown in offline tutor mode.'},
+];
+const VID = SCENES.findIndex(s => s.video);
+const TOTAL = SCENES.reduce((a,s)=>a+s.dur,0); // 300
+const PLAN_START = SCENES.map((_,i)=>SCENES.slice(0,i).reduce((a,s)=>a+s.dur,0));
+const fmt = s => { s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+
+const isPresenter = location.hash === '#presenter';
+if (isPresenter) document.body.classList.add('presenter');
+
+/* ===================== audience view ===================== */
+if (!isPresenter) {
+  const stage = document.getElementById('stage');
+  const fit = () => { const k = Math.min(innerWidth/1920, innerHeight/1080); stage.style.setProperty('--k', k); };
+  addEventListener('resize', fit); fit();
+
+  const els = SCENES.map(s => document.getElementById(s.id));
+  const video = document.getElementById('demo');
+  const meta = document.getElementById('meta');
+  let cur = 0, step = 0, auto = false, startedAt = null, sceneAt = performance.now(), presenter = null, videoFailed = false;
+  const elapsed = () => startedAt ? (performance.now() - startedAt) / 1000 : 0;
+  const sceneElapsed = () => (performance.now() - sceneAt) / 1000;
+  const start = () => { if (!startedAt) startedAt = performance.now(); };
+
+  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('on'),1400); }
+  function setStep(n){
+    step = n; const el = els[cur];
+    el.querySelectorAll('[data-step]').forEach(x => x.classList.toggle('shown', +x.dataset.step <= step));
+    el.classList.toggle('beat', SCENES[cur].id==='s2' && step>=1);
+    el.classList.toggle('closing', SCENES[cur].id==='s10' && step>=1);
+    sync();
+  }
+  function go(i, atEnd, noPlay){
+    i = Math.max(0, Math.min(SCENES.length-1, i));
+    if (i !== cur || !els[i].classList.contains('active')) {
+      els[cur].classList.remove('active');
+      // restart entrance animations
+      void els[i].offsetWidth; els[i].classList.add('active');
+    }
+    if (cur === VID && i !== VID) video.pause();
+    cur = i; sceneAt = performance.now();
+    setStep(atEnd ? (SCENES[i].steps||0) : 0);
+    if (SCENES[i].video && !noPlay) playDemo();
+    document.querySelector('#hud .bar').style.width = ((i+1)/SCENES.length*100)+'%';
+    sync();
+  }
+  function next(){ start(); const s=SCENES[cur]; if (step < (s.steps||0)) { setStep(step+1); sceneAt=performance.now()-(s.stepAt?.[step-1]||0)*1000; } else if (cur < SCENES.length-1) go(cur+1); }
+  function prev(){ if (step>0) setStep(step-1); else if (cur>0) go(cur-1, true); }
+  function playDemo(){
+    els[VID].classList.remove('done');
+    if (videoFailed) return;
+    try { video.currentTime = 0; } catch {}
+    // Only fall back to muted playback when the browser blocked sound, not when playback was interrupted.
+    const p = video.play(); if (p) p.catch(err => { if (err.name !== 'NotAllowedError') return; video.muted = true; video.play().catch(()=>{}); toast('Video started muted (press M)'); });
+  }
+  video.addEventListener('error', () => { videoFailed = true; els[VID].classList.add('failed'); });
+  video.addEventListener('ended', () => { els[VID].classList.add('done'); auto = false; });
+  const finish = () => { video.pause(); if (cur !== VID) go(VID, false, true); els[VID].classList.add('done'); };
+
+  function toggleAuto(){ auto = !auto; if (auto) { start(); sceneAt = performance.now(); } toast(auto ? 'Auto mode ON' : 'Manual mode'); sync(); }
+  function reset(){ startedAt = null; auto = false; video.pause(); go(0); toast('Reset'); }
+  function fullscreen(){ if (!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(()=>toast('Fullscreen not available')); else document.exitFullscreen?.(); }
+  function openPresenter(){
+    presenter = window.open(location.href.split('#')[0] + '#presenter', 'missionlab-presenter', 'width=1280,height=820');
+    if (!presenter) toast('Pop-up blocked: allow pop-ups for this file');
+    setTimeout(sync, 600);
+  }
+  function renderNotes(){
+    const s = SCENES[cur];
+    document.getElementById('notes').innerHTML = `<h4>${cur+1}/10 · ${s.title} · ${s.dur}s</h4><p>${s.script}</p><p style="margin-top:12px;color:var(--muted)">Cue: ${s.cue} · Short: ${s.short}</p>`;
+  }
+  function cmd(c, arg){
+    ({next, prev, auto:toggleAuto, reset, replay:()=>{ if(cur!==VID) go(VID); else playDemo(); }, skip:finish,
+      jump:()=>go(+arg), black:()=>document.getElementById('black').classList.toggle('on'),
+      mute:()=>{ video.muted=!video.muted; toast(video.muted?'Muted':'Sound on'); }}[c]||(()=>{}))();
+  }
+  function sync(){
+    const e = elapsed(), late = e - (PLAN_START[cur] + Math.min(sceneElapsed(), SCENES[cur].dur));
+    meta.querySelector('.n').textContent = `${cur+1}/10`;
+    const t = meta.querySelector('.t'); t.textContent = `${fmt(e)} / 5:00`; t.className = 't' + (e>TOTAL?' over':late>10?' late':'');
+    meta.querySelector('.m').textContent = auto ? 'AUTO' : '';
+    if (document.getElementById('notes').classList.contains('on')) renderNotes();
+    if (presenter && !presenter.closed) presenter.postMessage({type:'state', cur, step, auto, elapsed:e, sceneElapsed:sceneElapsed(), started:!!startedAt, videoFailed}, '*');
+  }
+  addEventListener('message', ev => { if (ev.data?.type === 'cmd') { start(); cmd(ev.data.cmd, ev.data.arg); } if (ev.data?.type==='hello') { presenter = ev.source; sync(); } });
+
+  setInterval(() => {
+    if (auto) {
+      const s = SCENES[cur], t = sceneElapsed();
+      if (s.steps && step < s.steps && t >= s.stepAt[step]) setStep(step+1);
+      else if (!s.video && t >= s.dur) { if (cur < SCENES.length-1) go(cur+1); else auto = false; }
+      else if (s.video && videoFailed && t >= s.dur) finish();
+    }
+    sync();
+  }, 250);
+
+  addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if (['ArrowRight','PageDown',' ','Enter','ArrowDown'].includes(k)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft','PageUp','Backspace','ArrowUp'].includes(k)) { e.preventDefault(); prev(); }
+    else if (/^[0-9]$/.test(k)) { start(); go(k==='0' ? 9 : +k-1); }
+    else if (k==='Home') go(0); else if (k==='End') go(9);
+    else if (k==='f'||k==='F') fullscreen();
+    else if (k==='a'||k==='A') toggleAuto();
+    else if (k==='p'||k==='P') openPresenter();
+    else if (k==='n'||k==='N') { document.getElementById('notes').classList.toggle('on'); renderNotes(); }
+    else if (k==='t'||k==='T') meta.classList.toggle('hide-timer');
+    else if (k==='v'||k==='V') cmd('replay');
+    else if (k==='s'||k==='S') cmd('skip');
+    else if (k==='m'||k==='M') cmd('mute');
+    else if (k==='b'||k==='B'||k==='.') cmd('black');
+    else if (k==='R' && e.shiftKey) reset();
+    else if (k==='h'||k==='H'||k==='?') document.getElementById('help').classList.toggle('on');
+    else if (k==='Escape') document.querySelectorAll('.overlay.on').forEach(o=>o.classList.remove('on'));
+  });
+  stage.addEventListener('click', e => { if (e.target.closest('.overlay')) return; next(); });
+
+  /* starfield + drifting dust; static when reduced motion is requested */
+  const cv = document.getElementById('sky'), cx = cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stars = Array.from({length:260}, () => ({x:Math.random()*1920, y:Math.random()*1080, r:Math.random()*1.6+.3, p:Math.random()*6.28, s:Math.random()*.02+.004}));
+  const dust = Array.from({length:70}, () => ({x:Math.random()*1920, y:Math.random()*1080, r:Math.random()*2.2+.6, vx:Math.random()*.5+.15, vy:(Math.random()-.5)*.15}));
+  function draw(){
+    cx.clearRect(0,0,1920,1080);
+    for (const s of stars) { s.p += s.s; cx.globalAlpha = .35 + .45*Math.abs(Math.sin(s.p)); cx.fillStyle = '#F5F3EE'; cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.28); cx.fill(); }
+    const tint = SCENES[cur].id==='s2' ? '#9470F5' : '#E88754';
+    if (['s1','s2','s3','s10'].includes(SCENES[cur].id)) for (const d of dust) { d.x += d.vx; d.y += d.vy; if (d.x>1930) d.x=-10; cx.globalAlpha=.28; cx.fillStyle=tint; cx.beginPath(); cx.arc(d.x,d.y,d.r,0,6.28); cx.fill(); }
+    cx.globalAlpha = 1;
+    if (!reduce && cur !== VID) requestAnimationFrame(draw); else if (!reduce) setTimeout(()=>requestAnimationFrame(draw), 500);
+  }
+  draw();
+
+  go(0);
+  setTimeout(()=>toast('H for controls · P for presenter view'), 800);
+}
+
+/* ===================== presenter view ===================== */
+else {
+  const $ = id => document.getElementById(id);
+  const main = window.opener;
+  const send = (cmd, arg) => main && !main.closed ? main.postMessage({type:'cmd', cmd, arg}, '*') : null;
+  if (!main) $('pvWarn').textContent = 'Open this view by pressing P in the presentation window, so it can control the slides.';
+  else main.postMessage({type:'hello'}, '*');
+  document.querySelectorAll('#pv button').forEach(b => b.onclick = () => {
+    if (b.dataset.cmd==='reset' && !confirm('Reset to scene 1 and clear the timer?')) return;
+    send(b.dataset.cmd, b.dataset.to);
+  });
+  addEventListener('keydown', e => {
+    if (['ArrowRight','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); send('next'); }
+    else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); send('prev'); }
+    else if (/^[0-9]$/.test(e.key)) send('jump', e.key==='0'?9:+e.key-1);
+  });
+  $('pvList').innerHTML = SCENES.map((s,i)=>`<li>${s.title}<span>${fmt(PLAN_START[i])}–${fmt(PLAN_START[i]+s.dur)}</span></li>`).join('');
+  let last = -1;
+  addEventListener('message', ev => {
+    const d = ev.data; if (d?.type !== 'state') return;
+    const s = SCENES[d.cur], nx = SCENES[d.cur+1];
+    $('pvClock').textContent = fmt(d.elapsed);
+    const late = d.elapsed - (PLAN_START[d.cur] + Math.min(d.sceneElapsed, s.dur));
+    const p = $('pvPace');
+    if (!d.started) { p.textContent = 'not started'; p.className='pace'; }
+    else if (d.elapsed > TOTAL) { p.textContent = 'OVER 5:00, wrap up'; p.className='pace over'; }
+    else if (late > 10) { p.textContent = `${Math.round(late)}s behind: use the short version`; p.className='pace late'; }
+    else { p.textContent = 'on plan'; p.className='pace ok'; }
+    $('pvMode').textContent = d.auto ? 'AUTO' : 'manual';
+    $('pvSceneBar').style.width = Math.min(100, d.sceneElapsed/s.dur*100) + '%';
+    $('pvWarn').textContent = d.videoFailed ? 'Demo video failed to load: the fallback card is showing. Narrate the run, then press Skip.' : '';
+    $('pvNow').textContent = `Now · ${d.cur+1}/10 · ${fmt(d.sceneElapsed)} of ${fmt(s.dur)}` + (s.steps?` · beat ${d.step+1}/${s.steps+1}`:'');
+    if (d.cur === last) return;
+    last = d.cur;
+    $('pvTitle').textContent = s.title;
+    $('pvScript').textContent = s.script;
+    $('pvDl').innerHTML = [['Main idea',s.idea],['Visual cue',s.cue],['Emphasise',s.emph],['Transition',s.trans],['If behind',s.short],['Facts',s.facts]].filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+    $('pvNext').textContent = nx ? `${d.cur+2}. ${nx.title}` : 'End: the video fades to “Thank you”. Stay there for questions.';
+    $('pvNextCue').textContent = nx ? nx.cue : '';
+    document.querySelectorAll('#pvList li').forEach((li,i)=>li.classList.toggle('cur', i===d.cur));
+  });
+}
+</script>
+</body>
+</html>
